@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RK Dress Shop - Billing System</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <img src="images/logo.png" alt="RK Dress Shop Logo" class="logo" id="logo" onerror="this.src='https://images.unsplash.com/photo-1562157873-818bc0726f68?w=200&h=200&fit=crop&auto=format'">
+            <h1 class="shop-name">RK Dress Shop</h1>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="nav-btn active" data-tab="products">Products</button>
+        <button class="nav-btn" data-tab="billing">Billing</button>
+        <button class="nav-btn" data-tab="dashboard">Dashboard</button>
+        <button class="nav-btn" data-tab="bills">Bills</button>
+        <button class="nav-btn" data-tab="manage">Manage</button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+        <!-- Products Tab -->
+        <section id="products-tab" class="tab-content active">
+            <h2>Our Products</h2>
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Billing Tab -->
+        <section id="billing-tab" class="tab-content">
+            <div class="billing-container">
+                <div class="billing-products">
+                    <h2>Select Products</h2>
+                    <div class="products-grid" id="billing-products-grid">
+                        <!-- Products for billing will be loaded here -->
+                    </div>
+                </div>
+                <div class="cart-section">
+                    <h2>Current Bill</h2>
+                    <div class="cart-items" id="cart-items">
+                        <p class="empty-cart">Cart is empty</p>
+                    </div>
+                    <div class="cart-summary">
+                        <div class="cart-total">
+                            <strong>Total: ₹<span id="cart-total">0.00</span></strong>
+                        </div>
+                        <button class="btn btn-primary" id="generate-bill-btn">Generate Bill</button>
+                        <button class="btn btn-secondary" id="save-draft-btn">Save as Draft</button>
+                        <button class="btn btn-secondary" id="clear-cart-btn">Clear Cart</button>
+                    </div>
+                    <div class="draft-bills-section" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">Saved Drafts</h3>
+                        <div id="draft-bills-container">
+                            <!-- Draft bills will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Tab -->
+        <section id="dashboard-tab" class="tab-content">
+            <h2>Performance Dashboard</h2>
+            <div class="dashboard-controls">
+                <button class="btn btn-filter active" data-period="day">Today</button>
+                <button class="btn btn-filter" data-period="month">This Month</button>
+                <button class="btn btn-filter" data-period="year">This Year</button>
+            </div>
+            <div class="dashboard-stats" id="dashboard-stats">
+                <!-- Dashboard statistics will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Bills Tab -->
+        <section id="bills-tab" class="tab-content">
+            <h2>Bill History</h2>
+            <div class="bills-container" id="bills-container">
+                <!-- Bills will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Manage Tab -->
+        <section id="manage-tab" class="tab-content">
+            <h2>Product Management</h2>
+            <button class="btn btn-primary" id="add-product-btn">Add New Product</button>
+            <div class="products-management" id="products-management">
+                <!-- Products for management will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Add Product</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price (₹):</label>
+                    <input type="number" id="product-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Image URL:</label>
+                    <input type="url" id="product-image" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-product-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bill View Modal -->
+    <div id="bill-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Bill Details</h2>
+            <div id="bill-details">
+                <!-- Bill details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Edit Modal -->
+    <div id="bill-edit-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Bill</h2>
+            <form id="bill-edit-form">
+                <div id="bill-edit-items">
+                    <!-- Bill items will be loaded here -->
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button type="button" class="btn btn-secondary" id="add-bill-item-btn" style="width: auto; margin-bottom: 1rem;">+ Add Item</button>
+                </div>
+                <div class="bill-detail-total" style="margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span><strong>Total:</strong></span>
+                        <span><strong>₹<span id="bill-edit-total">0.00</span></strong></span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-bill-edit-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Item Edit Modal -->
+    <div id="cart-item-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Cart Item</h2>
+            <form id="cart-item-edit-form">
+                <div class="form-group">
+                    <label for="cart-item-product">Product:</label>
+                    <select id="cart-item-product" required>
+                        <option value="">Select Product</option>
+                        <!-- Products will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cart-item-quantity">Quantity:</label>
+                    <input type="number" id="cart-item-quantity" min="1" step="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="cart-item-price">Price (₹):</label>
+                    <input type="number" id="cart-item-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-cart-edit-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/storage.js"></script>
+    <script src="scripts/products.js"></script>
+    <script src="scripts/billing.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    <script src="scripts/bills.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
+
